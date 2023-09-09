@@ -1,4 +1,4 @@
-use pyo3::{prelude::*, types::PyBool};
+use pyo3::{prelude::*};
 use cel_interpreter::{Context, Program, Value};
 
 /* As I understood `unsandable` prevents class from being thread-safe and
@@ -19,7 +19,7 @@ pyo3_runtime.PanicException: assertion failed: `(left == right)`
   left: `ThreadId(2)`,
  right: `ThreadId(1)`: rust_python_example::MyProgram is unsendable, but sent to another thread!    
 */
-#[pyclass(unsendable)]
+#[pyclass]
 struct MyProgram {
     program: Program
 }
@@ -42,6 +42,9 @@ impl MyProgram {
         }
     }
 }
+
+// Implement Send to tell compiler that it's thread-safe?
+unsafe impl Send for MyProgram {}
 
 /// A Python module implemented in Rust.
 #[pymodule]
