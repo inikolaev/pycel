@@ -1,0 +1,1 @@
+MyStr = str

@@ -8,17 +8,15 @@ You would need to have Rust toolchain installed and Python virtual environment c
 Otherwise `maturin` will not be able to install the package,
 
 ```bash
+# Create new virtual environment
+pyenv virtualenv 3.11 rust-python-example
+
+# And activate it
+pyenv activate
+
+# Compile extension
 maturin develop
-python -c "import rust_python_example; program = rust_python_example.MyProgram('1 == 1'); print(program.evaluate());"
-```
 
-Python example:
-```python
-import rust_python_example
-
-# Compile expression
-program = rust_python_example.MyProgram('1 == 1')
-
-# Evaluate expression
-print(program.evaluate())
+# Run a test
+python main.py
 ```

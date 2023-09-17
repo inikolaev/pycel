@@ -1,5 +1,6 @@
 use pyo3::{prelude::*};
 use cel_interpreter::{Context, Program, Value};
+use pyo3::types::PyDict;
 
 /* As I understood `unsandable` prevents class from being thread-safe and
    there will be error when accessed from a differen thread:
@@ -32,13 +33,26 @@ impl MyProgram {
         MyProgram { program }
     }
 
-    fn evaluate(&mut self) -> PyResult<bool> {
-        let context = Context::default();
-        let value = self.program.execute(&context).unwrap();
-        
-        match value {
-            Value::Bool(v) => Ok(v),
-            _ => Ok(false),
+    fn evaluate(&mut self, ctx: &PyDict) -> PyResult<bool> {
+        let mut context = Context::default();
+
+        for (key, value) in ctx {
+            if let Ok(name) = key.extract::<String>() {
+                if let Ok(value) = value.extract::<bool>() {
+                    context.add_variable(name, Value::Bool(value));
+                } else if let Ok(value) = value.extract::<i32>() {
+                    context.add_variable(name, Value::Int(value));
+                } else if let Ok(value) = value.extract::<String>() {
+                    context.add_variable(name, Value::String(value.into()));
+                }
+            }
+        }
+
+        let result = self.program.execute(&context);
+
+        match result {
+            Ok(Value::Bool(value)) => Ok(value),
+            _ => Ok(false)
         }
     }
 }
