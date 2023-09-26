@@ -3,6 +3,11 @@ class CelInt:
         self.value = value
 
 
+class CelFloat:
+    def __init__(self, value: float) -> None:
+        self.value = value
+
+
 class CelBool:
     def __init__(self, value: bool) -> None:
         self.value = value

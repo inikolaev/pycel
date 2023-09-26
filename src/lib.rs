@@ -39,6 +39,10 @@ enum CelValue {
         #[pyo3(attribute("value"))]
         value: String,
     },
+    CelFloat{
+        #[pyo3(attribute("value"))]
+        value: f64,
+    },
 }
 
 pub trait ToCelValue {
@@ -53,6 +57,9 @@ impl ToCelValue for CelValue {
             },
             CelValue::CelInt {value} => {
                 Value::Int(*value)
+            },
+            CelValue::CelFloat {value} => {
+                Value::Float(*value)
             },
             CelValue::CelString {value} => {
                 Value::String((*value).clone().into())

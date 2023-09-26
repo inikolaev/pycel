@@ -1,11 +1,11 @@
 import inspect
 import rust_python_example
-from rust_python_example.types import CelBool, CelInt, CelString
+from rust_python_example.types import CelBool, CelInt, CelFloat, CelString
 
 expressions = [
-    'b && (c == "string")',
-    'b && c == "string"',
-    'c == "string" && b',
+    'b && (c == "string") && f >= 3.14',
+    'b && c == "string" && f >= 3.14',
+    'c == "string" && b && f >= 3.14',
 ]
 
 for expression in expressions:
@@ -13,7 +13,7 @@ for expression in expressions:
     program = rust_python_example.MyProgram(expression)
 
     # Evaluate expression
-    result = program.evaluate({"a": CelInt(1), "b": CelBool(True), "c": CelString("string")})
+    result = program.evaluate({"a": CelInt(1), "b": CelBool(True), "c": CelString("string"), "f": CelFloat(3.15)})
     print(inspect.signature(program.evaluate))
 
     # Print results
