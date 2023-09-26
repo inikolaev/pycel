@@ -85,9 +85,9 @@ dependencies = [
 
 [[package]]
 name = "cel-interpreter"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5bcef2844adf76cbbf114f58dbaa7d6f440009b7e7be49d6d7832d5b57e0acf8"
+checksum = "93fe2aae00326edf5675e54fd3275f750226e3a348affb0eba0f2e7ad81f0365"
 dependencies = [
  "cel-parser",
  "chrono",
@@ -98,9 +98,9 @@ dependencies = [
 
 [[package]]
 name = "cel-parser"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c4389f486bfff54cad00345b54684a89a93571a1ca534ac88627fac161a1a4d"
+checksum = "f51427ca322a9778fab82fed302c613a12ddc6338320c53256bb68a49bcf7456"
 dependencies = [
  "lalrpop",
  "lalrpop-util",
