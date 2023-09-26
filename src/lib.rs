@@ -1,6 +1,6 @@
+use std::collections::HashMap;
 use pyo3::{prelude::*};
 use cel_interpreter::{Context, Program, Value};
-use pyo3::types::PyDict;
 
 /* As I understood `unsandable` prevents class from being thread-safe and
    there will be error when accessed from a differen thread:
@@ -25,6 +25,42 @@ struct MyProgram {
     program: Program
 }
 
+#[derive(FromPyObject)]
+enum CelValue {
+    CelBool {
+        #[pyo3(attribute("value"))]
+        value: bool,
+    },
+    CelInt {
+        #[pyo3(attribute("value"))]
+        value: i32,
+    },
+    CelString {
+        #[pyo3(attribute("value"))]
+        value: String,
+    },
+}
+
+pub trait ToCelValue {
+    fn to_cel_value(&self) -> Value;
+}
+
+impl ToCelValue for CelValue {
+    fn to_cel_value(&self) -> Value {
+        match self {
+            CelValue::CelBool {value} => {
+                Value::Bool(*value)
+            },
+            CelValue::CelInt {value} => {
+                Value::Int(*value)
+            },
+            CelValue::CelString {value} => {
+                Value::String((*value).clone().into())
+            },
+        }
+    }
+}
+
 #[pymethods]
 impl MyProgram {
     #[new]
@@ -33,19 +69,11 @@ impl MyProgram {
         MyProgram { program }
     }
 
-    fn evaluate(&mut self, ctx: &PyDict) -> PyResult<bool> {
+    fn evaluate(&mut self, ctx: HashMap<String, CelValue>) -> PyResult<bool> {
         let mut context = Context::default();
 
-        for (key, value) in ctx {
-            if let Ok(name) = key.extract::<String>() {
-                if let Ok(value) = value.extract::<bool>() {
-                    context.add_variable(name, Value::Bool(value));
-                } else if let Ok(value) = value.extract::<i32>() {
-                    context.add_variable(name, Value::Int(value));
-                } else if let Ok(value) = value.extract::<String>() {
-                    context.add_variable(name, Value::String(value.into()));
-                }
-            }
+        for (name, value) in ctx {
+            context.add_variable(name, value.to_cel_value());
         }
 
         let result = self.program.execute(&context);
