@@ -7,7 +7,6 @@ def get_value() -> str:
     return str(random.randint(1, 9)) + "".join(str(random.randint(0, 9)) for _ in range(0,5))
 
 expression = "a in [" + ",".join(get_value() for _ in range(10000)) + "]"
-print(expressions)
 program = rust_python_example.CelProgram(expression)
 
 import time
