@@ -8,7 +8,7 @@ def get_value() -> str:
 
 expression = "a in [" + ",".join(get_value() for _ in range(10000)) + "]"
 print(expressions)
-program = rust_python_example.MyProgram(expression)
+program = rust_python_example.CelProgram(expression)
 
 import time
 start = time.time()

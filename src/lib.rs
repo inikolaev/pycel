@@ -22,7 +22,7 @@ pyo3_runtime.PanicException: assertion failed: `(left == right)`
  right: `ThreadId(1)`: rust_python_example::MyProgram is unsendable, but sent to another thread!    
 */
 #[pyclass]
-struct MyProgram {
+struct CelProgram {
     program: Program
 }
 
@@ -86,11 +86,11 @@ impl ToCelValue for CelValue {
 }
 
 #[pymethods]
-impl MyProgram {
+impl CelProgram {
     #[new]
     fn new(expr: String) -> Self {
         let program = Program::compile(&expr).unwrap();
-        MyProgram { program }
+        CelProgram { program }
     }
 
     fn evaluate(&mut self, ctx: HashMap<String, CelValue>) -> PyResult<bool> {
@@ -110,11 +110,11 @@ impl MyProgram {
 }
 
 // Implement Send to tell compiler that it's thread-safe?
-unsafe impl Send for MyProgram {}
+unsafe impl Send for CelProgram {}
 
 /// A Python module implemented in Rust.
 #[pymodule]
 fn rust_python_example(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_class::<MyProgram>()?;
+    m.add_class::<CelProgram>()?;
     Ok(())
 }

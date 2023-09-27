@@ -10,7 +10,7 @@ expressions = [
 
 for expression in expressions:
     # Compile expression
-    program = rust_python_example.MyProgram(expression)
+    program = rust_python_example.CelProgram(expression)
 
     # Evaluate expression
     result = program.evaluate({
