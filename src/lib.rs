@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use pyo3::{prelude::*};
 use cel_interpreter::{Context, Program, Value};
+use cel_interpreter::objects::{Key, Map};
 
 /* As I understood `unsandable` prevents class from being thread-safe and
    there will be error when accessed from a differen thread:
@@ -47,6 +48,10 @@ enum CelValue {
         #[pyo3(attribute("value"))]
         value: Vec<CelValue>,
     },
+    CelMap{
+        #[pyo3(attribute("value"))]
+        value: HashMap<String, CelValue>,
+    },
 }
 
 pub trait ToCelValue {
@@ -70,6 +75,11 @@ impl ToCelValue for CelValue {
             },
             CelValue::CelList {value} => {
                 Value::List(value.iter().map(|x| x.to_cel_value()).collect::<Vec<Value>>().into())
+            },
+            CelValue::CelMap {value} => {
+                let mut map = HashMap::new();
+                map.extend(value.iter().map(|(k, v)| (Key::String((*k).clone().into()), v.to_cel_value())));
+                Value::Map(Map::from(map))
             },
         }
     }

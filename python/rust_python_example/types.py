@@ -21,5 +21,10 @@ class CelString:
 
 
 class CelList:
-    def __init__(self, value: list[Union[CelInt, CelFloat, CelBool, CelString, "CelList"]]) -> None:
+    def __init__(self, value: list[Union[CelInt, CelFloat, CelBool, CelString, "CelList", "CelMap"]]) -> None:
+        self.value = value
+
+
+class CelMap:
+    def __init__(self, value: dict[str, Union[CelInt, CelFloat, CelBool, CelString, CelList, "CelMap"]]) -> None:
         self.value = value
