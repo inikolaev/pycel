@@ -1,4 +1,4 @@
-# rust-python-example
+# pycel
 
 An example of a Python wrapper for Common Expression Language [interpreter](https://github.com/clarkmcc/cel-rust) written in Rust.
 
@@ -9,7 +9,7 @@ Otherwise `maturin` will not be able to install the package,
 
 ```bash
 # Create new virtual environment
-pyenv virtualenv 3.11 rust-python-example
+pyenv virtualenv 3.11 pycel
 
 # And activate it
 pyenv activate

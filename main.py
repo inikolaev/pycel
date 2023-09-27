@@ -1,6 +1,6 @@
 import inspect
-import rust_python_example
-from rust_python_example.types import CelBool, CelInt, CelFloat, CelString, CelList, CelMap
+import pycel
+from pycel.types import CelBool, CelInt, CelFloat, CelString, CelList, CelMap
 
 expressions = [
     'b && (c == "string") && f >= 3.14 && a in g && o.id == d',
@@ -10,7 +10,7 @@ expressions = [
 
 for expression in expressions:
     # Compile expression
-    program = rust_python_example.CelProgram(expression)
+    program = pycel.CelProgram(expression)
 
     # Evaluate expression
     result = program.evaluate({

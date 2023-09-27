@@ -8,7 +8,7 @@ use cel_interpreter::objects::{Key, Map};
 
 thread '<unnamed>' panicked at 'assertion failed: `(left == right)`
   left: `ThreadId(2)`,
- right: `ThreadId(1)`: rust_python_example::MyProgram is unsendable, but sent to another thread!', /Users/inikolaev/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pyo3-0.19.2/src/impl_/pyclass.rs:927:9
+ right: `ThreadId(1)`: pycel::MyProgram is unsendable, but sent to another thread!', /Users/inikolaev/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pyo3-0.19.2/src/impl_/pyclass.rs:927:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 Exception in thread Thread-1 (worker):
 Traceback (most recent call last):
@@ -19,7 +19,7 @@ Traceback (most recent call last):
   File "<stdin>", line 2, in worker
 pyo3_runtime.PanicException: assertion failed: `(left == right)`
   left: `ThreadId(2)`,
- right: `ThreadId(1)`: rust_python_example::MyProgram is unsendable, but sent to another thread!    
+ right: `ThreadId(1)`: pycel::MyProgram is unsendable, but sent to another thread!
 */
 #[pyclass]
 struct CelProgram {
@@ -114,7 +114,7 @@ unsafe impl Send for CelProgram {}
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn rust_python_example(_py: Python, m: &PyModule) -> PyResult<()> {
+fn pycel(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<CelProgram>()?;
     Ok(())
 }
