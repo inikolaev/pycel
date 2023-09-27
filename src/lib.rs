@@ -43,6 +43,10 @@ enum CelValue {
         #[pyo3(attribute("value"))]
         value: f64,
     },
+    CelList{
+        #[pyo3(attribute("value"))]
+        value: Vec<CelValue>,
+    },
 }
 
 pub trait ToCelValue {
@@ -63,6 +67,9 @@ impl ToCelValue for CelValue {
             },
             CelValue::CelString {value} => {
                 Value::String((*value).clone().into())
+            },
+            CelValue::CelList {value} => {
+                Value::List(value.iter().map(|x| x.to_cel_value()).collect::<Vec<Value>>().into())
             },
         }
     }

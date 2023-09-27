@@ -1,3 +1,5 @@
+from typing import Union
+
 class CelInt:
     def __init__(self, value: int) -> None:
         self.value = value
@@ -15,4 +17,9 @@ class CelBool:
 
 class CelString:
     def __init__(self, value: str) -> None:
+        self.value = value
+
+
+class CelList:
+    def __init__(self, value: list[Union[CelInt, CelFloat, CelBool, CelString, "CelList"]]) -> None:
         self.value = value
