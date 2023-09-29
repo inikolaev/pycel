@@ -1,29 +1,12 @@
 use std::collections::HashMap;
+use std::sync::Arc;
 use pyo3::{prelude::*};
 use cel_interpreter::{Context, Program, Value};
 use cel_interpreter::objects::{Key, Map};
 
-/* As I understood `unsandable` prevents class from being thread-safe and
-   there will be error when accessed from a differen thread:
-
-thread '<unnamed>' panicked at 'assertion failed: `(left == right)`
-  left: `ThreadId(2)`,
- right: `ThreadId(1)`: pycel::MyProgram is unsendable, but sent to another thread!', /Users/inikolaev/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pyo3-0.19.2/src/impl_/pyclass.rs:927:9
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Exception in thread Thread-1 (worker):
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
->>>     self.run()
-  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/threading.py", line 975, in run
-    self._target(*self._args, **self._kwargs)
-  File "<stdin>", line 2, in worker
-pyo3_runtime.PanicException: assertion failed: `(left == right)`
-  left: `ThreadId(2)`,
- right: `ThreadId(1)`: pycel::MyProgram is unsendable, but sent to another thread!
-*/
 #[pyclass]
 struct CelProgram {
-    program: Program
+    program: Arc<Program>
 }
 
 #[derive(FromPyObject)]
@@ -34,7 +17,7 @@ enum CelValue {
     },
     CelInt {
         #[pyo3(attribute("value"))]
-        value: i32,
+        value: i64,
     },
     CelString {
         #[pyo3(attribute("value"))]
@@ -89,7 +72,7 @@ impl ToCelValue for CelValue {
 impl CelProgram {
     #[new]
     fn new(expr: String) -> Self {
-        let program = Program::compile(&expr).unwrap();
+        let program = Arc::new(Program::compile(&expr).unwrap());
         CelProgram { program }
     }
 
@@ -108,9 +91,6 @@ impl CelProgram {
         }
     }
 }
-
-// Implement Send to tell compiler that it's thread-safe?
-unsafe impl Send for CelProgram {}
 
 /// A Python module implemented in Rust.
 #[pymodule]

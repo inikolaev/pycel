@@ -9,5 +9,6 @@ name = "pycel"
 crate-type = ["cdylib"]
 
 [dependencies]
-cel-interpreter = "0.4.1"
+# cel-interpreter = "0.4.1"
+cel-interpreter = { git = "https://github.com/clarkmcc/cel-rust.git", branch = "thread-safety"}
 pyo3 = "0.19.0"
